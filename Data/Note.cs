@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace PersonalFinanceManager.Data
 {
-    class Note : INote
+    class Note 
     {
-
-        /// <summary>
-        /// /
-        /// </summary>
         public Note()
         {
             id = count++;
@@ -30,13 +26,7 @@ namespace PersonalFinanceManager.Data
             Time = time;
             Sum = sum;
         }
-        //public static int count = 1;
-        //public int id;
-        //public DateTime? Time;
-        //public decimal? Sum;
-        //public string Description = string.Empty;
-        //public ProfitCost ProfitCost;
-        //public PlanDone PlanDone;
+       
 
         public static int count = 1;
         public int id { get; set; }
@@ -51,30 +41,8 @@ namespace PersonalFinanceManager.Data
         //  private static List<INote> notes = new List<INote>();
         public override string ToString()
         {
-            //  return $"id: {id}\tTime:{Time}\tSum: {Sum}\tDone: {Done}\tPlan: {Plan}\tDesc: {Description}\tPlan: {Plan}";
-            return $"id: {id}  Desc: {Description}  Sum: {Sum}  Time:{Time}  Done: {ProfitCost}  Plan: {PlanDone}";
+            return $"id:{id} Time:{Time} Done:{ProfitCost}\t Plan:{PlanDone}\t Desc:{Description}\t Sum:{Sum}";
         }
 
-        //public  Note Add(Note note)
-        //{
-        //    Console.Clear();
-        //    Console.WriteLine("Add Method");
-        //    Console.ReadKey();
-        //    return new Note();
-        //}
-
-        //public  void Edit(Note note)
-        //{
-        //    Console.Clear();
-        //    Console.WriteLine("Edit Method");
-        //    Console.ReadKey();
-        //}
-        //public  void Del(Note note)
-        //{
-        //    Console.Clear();
-        //    Console.WriteLine("Del Method");
-
-        //    Console.ReadKey();
-        //}
     }
 }

@@ -3,8 +3,10 @@
     enum PlanDone
     {
         //Plan,
-        //Done,
+        //Done
         План,
         Выполнено
+        //X,
+        //V
     }
 }
