@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceManager.Data
 {
-    class Note 
+    class Note
     {
         public Note()
         {
@@ -14,19 +10,19 @@ namespace PersonalFinanceManager.Data
         }
         public Note(string description, ProfitCost profit, PlanDone plan) : this()
         {
-          //  id = count++;
+            //  id = count++;
             Description = description;
             ProfitCost = profit;
             PlanDone = plan;
         }
 
-        public Note(/*int id,*/ string description, decimal sum, DateTime time, ProfitCost profit, PlanDone plan) 
+        public Note(/*int id,*/ string description, decimal sum, DateTime time, ProfitCost profit, PlanDone plan)
             : this(description, profit, plan)
         {
             Time = time;
             Sum = sum;
         }
-       
+
 
         public static int count = 1;
         public int id { get; set; }

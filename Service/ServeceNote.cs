@@ -1,30 +1,34 @@
 ﻿using PersonalFinanceManager.Data;
-using PersonalFinanceManager.View;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
-//using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PersonalFinanceManager.Service
 {
     class ServeceNote //: IService
     {
-        static string dir = $"C:\\{ typeof(Note).Name}";
+        static string currentDirectory = Directory.GetCurrentDirectory();
+        static string dir = $"{currentDirectory}\\{ typeof(Note).Name}";
         static string path = $"{dir}\\note.txt";
 
         public static List<Note> notes = new List<Note>();
         public ServeceNote()
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(dir);
-            if (!dirInfo.Exists)
+        }
+        public static void FileCreate()
+        {
+
+            if (!Directory.Exists(dir))
             {
-                dirInfo.Create();
+                Directory.CreateDirectory(dir);
             }
-            _ = LoadAsync();
+            if (!File.Exists(path))
+            {
+                File.Create(path);
+            }
         }
 
         public static void Add(Note note)
@@ -121,6 +125,31 @@ namespace PersonalFinanceManager.Service
             using FileStream createStream = File.Create(path);
             await JsonSerializer.SerializeAsync(createStream, notes);
             Console.WriteLine("Saved");
+        }
+        public static void DefaultData()
+        {
+            //DateTime dateTime1 =  UI.GetDateTime();
+            //Console.WriteLine(dateTime1);
+
+            DateTime dateTime = new DateTime(1980, 05, 15);
+            DateTime dateTime2 = new DateTime(2021, 11, 14);
+
+            ServeceNote.Add(new Note("Popcorn", -35.50M, DateTime.Now, ProfitCost.Расход, PlanDone.Выполнено));
+            ServeceNote.Add(new Note("Шампанское", -150.00M, DateTime.Now, ProfitCost.Расход, PlanDone.План));
+            ServeceNote.Add(new Note("Хлеб", -12.0M, DateTime.Today, ProfitCost.Расход, PlanDone.Выполнено));
+            ServeceNote.Add(new Note("Масло", -32.0M, dateTime, ProfitCost.Доход, PlanDone.Выполнено));
+            ServeceNote.Add(new Note("Продал кресло", 1000.0M, dateTime2, ProfitCost.Доход, PlanDone.План));
+
+            ServeceNote.Add(new Note("Капуста", -15.12M, DateTime.Now, ProfitCost.Доход, PlanDone.Выполнено));
+            ServeceNote.Add(new Note("Кнэка", -12345.12M, DateTime.Now, ProfitCost.Расход, PlanDone.План));
+            ServeceNote.Add(new Note("Сахар", -270.00M, DateTime.Today, ProfitCost.Доход, PlanDone.План));
+            ServeceNote.Add(new Note("Чай", -43.0M, dateTime, ProfitCost.Доход, PlanDone.Выполнено));
+            ServeceNote.Add(new Note("Продал огурци", 1000.0M, dateTime2, ProfitCost.Доход, PlanDone.Выполнено));
+            ServeceNote.Add(new Note("Продал программу", 10000.0M, new DateTime(), ProfitCost.Доход, PlanDone.Выполнено));
+
+            ServeceNote.Validator();
+            _ = ServeceNote.SaveAsync();
+
         }
     }
 }

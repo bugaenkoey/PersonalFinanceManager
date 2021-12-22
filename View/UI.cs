@@ -3,8 +3,6 @@ using PersonalFinanceManager.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceManager.View
 {
@@ -14,16 +12,16 @@ namespace PersonalFinanceManager.View
         {
         }
 
-        const string ADD = "Добавить запись";
-        const string ALL = "Все";
-        const string BETWEEN_DATE = "По Дате";
-        const string PLAN_DONE = "Планируемые/Выполненые";
-        const string PROFIT_COST = "Доход/Расход";
-        const string BETWEEN_SUM = "По сумме";
-        const string DESCRIPTION = "На Букву";
-
         public static List<Note> Menu()
         {
+            const string ADD = "Добавить запись";
+            const string ALL = "Все";
+            const string BETWEEN_DATE = "По Дате";
+            const string PLAN_DONE = "Планируемые/Выполненые";
+            const string PROFIT_COST = "Доход/Расход";
+            const string BETWEEN_SUM = "По сумме";
+            const string DESCRIPTION = "По описанию";
+
             List<Note> selectedNotes = new List<Note>();
 
             List<string> menu = new List<string> { ADD, ALL, BETWEEN_DATE, PLAN_DONE, PROFIT_COST, BETWEEN_SUM, DESCRIPTION };
@@ -69,9 +67,7 @@ namespace PersonalFinanceManager.View
 
 
         public static T Select<T>(List<T> contents, int x = 0, int y = 0, string text = "")
-        //  public static T Select<T>(T[] contents, int x = 0, int y = 0, string text = "")
         {
-
             Console.SetCursorPosition(x, y);
             Console.Write(text);
             for (int i = 0; i < contents.Count; i++)
@@ -122,7 +118,7 @@ namespace PersonalFinanceManager.View
             const string EDIT = "Edit";
             const string DELETE = "Delete";
 
-            List<string> methods = new List<string> { ADD, MENU, EDIT, DELETE };
+            List<string> methods = new List<string> { MENU, ADD, EDIT, DELETE };
 
             string method = Select(methods, 0, 0, "Выберите действие :");
 
