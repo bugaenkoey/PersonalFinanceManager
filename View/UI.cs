@@ -14,41 +14,51 @@ namespace PersonalFinanceManager.View
         {
         }
 
+        const string ADD = "Добавить запись";
+        const string ALL = "Все";
+        const string BETWEEN_DATE = "По Дате";
+        const string PLAN_DONE = "Планируемые/Выполненые";
+        const string PROFIT_COST = "Доход/Расход";
+        const string BETWEEN_SUM = "По сумме";
+        const string DESCRIPTION = "На Букву";
+
         public static List<Note> Menu()
         {
             List<Note> selectedNotes = new List<Note>();
 
-            string[] menu = new string[] { "Все", "По Дате", "Планируемые/Выполненые", "Доход/Расход", "По сумме", "На Букву" };
+            List<string> menu = new List<string> { ADD, ALL, BETWEEN_DATE, PLAN_DONE, PROFIT_COST, BETWEEN_SUM, DESCRIPTION };
 
             string slc = UI.Select(menu, 0, 3, "Сделайте выбор :");
             switch (slc)
             {
-                case "Все":
+                case ADD:
+                    Add();
+                    break;
+                case ALL:
                     selectedNotes = ServeceNote.GetAll();
                     break;
-                case "По Дате":
+                case BETWEEN_DATE:
                     selectedNotes = ServeceNote.GetBetweenDate(
                         GetDateTime(25, 0, "Выберите меньшую дату"),
                         GetDateTime(25, 0, "Выберите большую дату")
                         ).ToList();
                     break;
-                case "Планируемые/Выполненые":
+                case PLAN_DONE:
                     selectedNotes = ServeceNote.GetPlanDone(EditPlanDone()).ToList();
                     break;
-                case "Доход/Расход":
+                case PROFIT_COST:
                     selectedNotes = ServeceNote.GetProfitCost(EditProfitCost()).ToList();
                     break;
-                case "По сумме":
+                case BETWEEN_SUM:
                     selectedNotes = ServeceNote.GetBetweenSum(
                         EditSum("Max"),
                         EditSum("Min")
                         ).ToList();
                     break;
-                case "На Букву":
+                case DESCRIPTION:
                     string desc = EditDesc();
                     selectedNotes = ServeceNote.GetDescription(desc).ToList();
                     break;
-
                 default:
                     selectedNotes = ServeceNote.GetAll();
                     break;
@@ -58,29 +68,24 @@ namespace PersonalFinanceManager.View
 
 
 
-        public static T Select<T>(T[] lictOption, int x = 0, int y = 0, string text = "")
+        public static T Select<T>(List<T> contents, int x = 0, int y = 0, string text = "")
+        //  public static T Select<T>(T[] contents, int x = 0, int y = 0, string text = "")
         {
-           
-            ConsoleKey Key;
+
             Console.SetCursorPosition(x, y);
             Console.Write(text);
-            for (int i = 0; i < lictOption.Length; i++)
+            for (int i = 0; i < contents.Count; i++)
             {
                 Console.SetCursorPosition(x, y + i + 1);
-                Console.Write($"[ ]{lictOption[i]}");
-
+                Console.Write($"[ ]{contents[i]}");
             }
+
+            ConsoleKey Key;
             int j = 0;
             do
             {
-                if (j == lictOption.Length)
-                {
-                    j = 0;
-                }
-                if (j < 0)
-                {
-                    j = lictOption.Length - 1;
-                }
+                if (j == contents.Count) { j = 0; }
+                if (j < 0) { j = contents.Count - 1; }
 
                 Console.SetCursorPosition(x + 1, y + j + 1);
                 Console.Write("*");
@@ -93,7 +98,7 @@ namespace PersonalFinanceManager.View
                 switch (Key)
                 {
                     case ConsoleKey.Enter:
-                        return lictOption[j];
+                        return contents[j];
 
                     case ConsoleKey.Escape:
                         return default(T);
@@ -111,22 +116,29 @@ namespace PersonalFinanceManager.View
         {
             Console.Clear();
             if (note == null) Add();
-            string[] methods = new string[] { "Menu", "Add", "Edit", "Delete" };
+
+            const string ADD = "Add";
+            const string MENU = "Menu";
+            const string EDIT = "Edit";
+            const string DELETE = "Delete";
+
+            List<string> methods = new List<string> { ADD, MENU, EDIT, DELETE };
+
             string method = Select(methods, 0, 0, "Выберите действие :");
 
             switch (method)
             {
-                case "Add":
+                case ADD:
                     Add();
                     break;
-                case "Edit":
+                case MENU:
+                    return;
+                case EDIT:
                     Edit(note);
                     break;
-                case "Delete":
+                case DELETE:
                     Delete(note);
                     break;
-                case "Menu":
-                    return;
                 default:
                     break;
             }
@@ -184,39 +196,36 @@ namespace PersonalFinanceManager.View
 
         private static PlanDone EditPlanDone()
         {
-           // Console.Clear();
-            return UI.Select(
-                (PlanDone[])Enum.GetValues(typeof(PlanDone)),
-                25, 12, "Сделайте выбор :");
+            var listOfEnums = Enum.GetValues(typeof(PlanDone)).Cast<PlanDone>().ToList();
+            //  Console.Clear();
+            return UI.Select(listOfEnums, 25, 12, "Сделайте выбор:");
         }
 
         private static ProfitCost EditProfitCost()
         {
-          //  Console.Clear();
-            return UI.Select(
-                (ProfitCost[])Enum.GetValues(typeof(ProfitCost)),
-                25, 10, "Сделайте выбор :");
+            var listOfEnums = Enum.GetValues(typeof(ProfitCost)).Cast<ProfitCost>().ToList();
+            //  Console.Clear();
+            return UI.Select(listOfEnums, 25, 10, "Сделайте выбор:");
         }
 
-        private static decimal EditSum(string? txt = "Введите сумму")
+        private static decimal EditSum(string? txt = "Введите сумму:")
         {
-          //  Console.Clear();
+            //  Console.Clear();
 
             Console.SetCursorPosition(25, 8);
-            Console.WriteLine(txt);
+            Console.Write(txt);
             decimal.TryParse(Console.ReadLine(), out decimal result);
             return result;
         }
 
         private static DateTime EditDateTime()
         {
-
             return GetDateTime(25, 4, "Выберите дату");
         }
 
         private static string EditDesc()
         {
-          //  Console.Clear();
+            //  Console.Clear();
             Console.SetCursorPosition(25, 2);
             Console.WriteLine("Введите описание");
             //  Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -228,15 +237,14 @@ namespace PersonalFinanceManager.View
         }
 
 
-        public delegate void ChangeDate(int n);
+        public delegate void ChangeDate(int n); // DELEGATE
         public static DateTime GetDateTime(int x = 0, int y = 0, string text = "")
         {
             DateTime dateTime = DateTime.Now;
-            Console.SetCursorPosition(x, y);
 
-            ChangeDate changeDays = AddDays;
-            ChangeDate changeMonths = AddMonths;
-            ChangeDate changeYears = AddYears;
+            ChangeDate changeDays = (n) => dateTime = dateTime.AddDays(n);
+            ChangeDate changeMonths = (n) => dateTime = dateTime.AddMonths(n);
+            ChangeDate changeYears = (n) => dateTime = dateTime.AddYears(n);
 
             ChangeDate[] delegats = new ChangeDate[] { changeDays, changeMonths, changeYears };
 
@@ -279,19 +287,6 @@ namespace PersonalFinanceManager.View
                     case ConsoleKey.RightArrow: j++; break;
                 }
             } while (true);
-
-            void AddDays(int n = 0)
-            {
-                dateTime = dateTime.AddDays(n);
-            }
-            void AddMonths(int n = 0)
-            {
-                dateTime = dateTime.AddMonths(n);
-            }
-            void AddYears(int n = 0)
-            {
-                dateTime = dateTime.AddYears(n);
-            }
         }
     }
 }

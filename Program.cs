@@ -21,12 +21,13 @@ namespace PersonalFinanceManager
             //  ServeceNote service = new();
             //  DefaultData();
 
-            _ = ServeceNote.LoadAsync();
+              _ = ServeceNote.LoadAsync();
+           new ServeceNote();
             ServeceNote.Validator();
 
             List<Note> notes;
             Console.WriteLine("Personal Finance Manager");
-            string itog;
+            string totalSum;
             Note selectedNote;
 
             do
@@ -45,14 +46,14 @@ namespace PersonalFinanceManager
                     continue;
 
                 }
-                itog = ServeceNote.Itog(notes);
+                totalSum = ServeceNote.TotalSum(notes);
 
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Итог по выбранному: {itog}");
+                Console.WriteLine($"Итог по выбранному: {totalSum}");
                 Console.ResetColor();
 
-                selectedNote = UI.Select(notes.ToArray(), 0, 3, "Сделайте выбор :");
+                selectedNote = UI.Select(notes, 0, 3, "Сделайте выбор :");
                 UI.SelectMethod(selectedNote);
 
                 Console.Clear();
@@ -61,7 +62,7 @@ namespace PersonalFinanceManager
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
 
 
-            ServeceNote.SaveAsync();
+            _ = ServeceNote.SaveAsync();
             Console.ReadLine();
 
             //var methods = Type.GetType("PersonalFinanceManager.Data.Note", false, true).GetMethods();
@@ -192,7 +193,7 @@ namespace PersonalFinanceManager
             // sum = profitCost == ProfitCost.Расход ? Math.Abs(sum) * -1 : Math.Abs(sum);
 
             ServeceNote.Validator();
-            ServeceNote.SaveAsync();
+            _ = ServeceNote.SaveAsync();
 
             //ProfitCost pc = UI.Select((ProfitCost[])Enum.GetValues(typeof(ProfitCost)), 10, 10, "Сделайте выбор :");
 

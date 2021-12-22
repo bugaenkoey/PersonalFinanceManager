@@ -13,12 +13,18 @@ namespace PersonalFinanceManager.Service
 {
     class ServeceNote //: IService
     {
-        static string path = $"C:\\{ typeof(Note).Name}\\note.txt";
+        static string dir = $"C:\\{ typeof(Note).Name}";
+        static string path = $"{dir}\\note.txt";
 
         public static List<Note> notes = new List<Note>();
         public ServeceNote()
         {
-
+            DirectoryInfo dirInfo = new DirectoryInfo(dir);
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
+            _ = LoadAsync();
         }
 
         public static void Add(Note note)
@@ -40,7 +46,7 @@ namespace PersonalFinanceManager.Service
             return result;
         }
 
-      public  static IEnumerable<Note> GetPlanDone(PlanDone planDone)
+        public static IEnumerable<Note> GetPlanDone(PlanDone planDone)
         {
             var result = from p in notes // определяем каждый объект из teams как t
                          where (p.PlanDone == planDone)//фильтрация по критерию
@@ -52,18 +58,22 @@ namespace PersonalFinanceManager.Service
         public static IEnumerable<Note> GetDescription(string desc)
         {
             var result = from p in notes // определяем каждый объект из teams как t
-                         where (p.Description.ToLower().Contains(desc.ToLower(), StringComparison.InvariantCultureIgnoreCase) )//фильтрация по критерию
-                         orderby p.Sum descending// упорядочиваем по возрастанию
+                         where (p.Description.ToLower().Contains(desc.ToLower()))//фильтрация по критерию
+
+                         //where (p.Description.ToLower().Contains(desc.ToLower(),
+                         //StringComparison.InvariantCultureIgnoreCase))//фильтрация по критерию
+
+                         orderby p.Description descending// упорядочиваем по возрастанию
                          select p; // выбираем объект
             return result;
         }
 
-        public static IEnumerable<Note> GetBetweenSum(decimal max , decimal min)
+        public static IEnumerable<Note> GetBetweenSum(decimal max, decimal min)
         {
             var result = from p in notes // определяем каждый объект из teams как t
-                        where (p.Sum < max && p.Sum > min)//фильтрация по критерию
-                        orderby p.Sum descending// упорядочиваем по возрастанию
-                        select p; // выбираем объект
+                         where (p.Sum < max && p.Sum > min)//фильтрация по критерию
+                         orderby p.Sum descending// упорядочиваем по возрастанию
+                         select p; // выбираем объект
             return result;
         }
 
@@ -76,10 +86,10 @@ namespace PersonalFinanceManager.Service
             return result;
         }
 
-        public void DeleteBetween(DateTime dateTimeStart, DateTime dateTimeEnd)
-        {
-          
-        }
+        //public void DeleteBetween(DateTime dateTimeStart, DateTime dateTimeEnd)
+        //{
+
+        //}
 
         internal static void Validator()
         {
@@ -92,12 +102,12 @@ namespace PersonalFinanceManager.Service
         }
 
 
-        internal static string Itog(List<Note> notes)
+        internal static string TotalSum(List<Note> notes)
         {
-            string itog = string.Empty;
-            itog = notes.Where(n => n.PlanDone == PlanDone.Выполнено).Sum(n => n.Sum).ToString();
+            string totalSum = string.Empty;
+            totalSum = notes.Where(n => n.PlanDone == PlanDone.Выполнено).Sum(n => n.Sum).ToString();
 
-            return itog;
+            return totalSum;
         }
 
         public static async Task LoadAsync()
@@ -108,8 +118,8 @@ namespace PersonalFinanceManager.Service
 
         public static async Task SaveAsync()
         {
-                using FileStream createStream = File.Create($"{path}");
-                await JsonSerializer.SerializeAsync(createStream, notes);
+            using FileStream createStream = File.Create(path);
+            await JsonSerializer.SerializeAsync(createStream, notes);
             Console.WriteLine("Saved");
         }
     }
