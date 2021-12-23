@@ -1,6 +1,7 @@
 ﻿using PersonalFinanceManager.Data;
 using PersonalFinanceManager.Service;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,6 +15,8 @@ namespace PersonalFinanceManager.View
 
         public static List<Note> Menu()
         {
+            List<Note> selectedNotes = new List<Note>();
+
             const string ADD = "Добавить запись";
             const string ALL = "Все";
             const string BETWEEN_DATE = "По Дате";
@@ -22,9 +25,8 @@ namespace PersonalFinanceManager.View
             const string BETWEEN_SUM = "По сумме";
             const string DESCRIPTION = "По описанию";
 
-            List<Note> selectedNotes = new List<Note>();
-
             List<string> menu = new List<string> { ADD, ALL, BETWEEN_DATE, PLAN_DONE, PROFIT_COST, BETWEEN_SUM, DESCRIPTION };
+
 
             string slc = UI.Select(menu, 0, 3, "Сделайте выбор :");
             switch (slc)
@@ -54,7 +56,7 @@ namespace PersonalFinanceManager.View
                         ).ToList();
                     break;
                 case DESCRIPTION:
-                    string desc = EditDesc();
+                    string desc = EditDescription();
                     selectedNotes = ServeceNote.GetDescription(desc).ToList();
                     break;
                 default:
@@ -161,25 +163,49 @@ namespace PersonalFinanceManager.View
             ServeceNote.Add(note);
         }
 
+
         private static void Edit(Note note)
         {
+            Console.WriteLine(note);
+            const string DESCRPTION = "Изменить описание";
+            const string TIME = "Изменить дату";
+            const string SUM = "Изменить сумму";
+            const string PROFIT_COST = "Расход Доход";
+            const string PLAN_DONE = "План Выполнено";
+            const string EXIT = "Выход";
+            List<string> editors = new List<string> { DESCRPTION, TIME, SUM, PROFIT_COST, PLAN_DONE , EXIT };
+
             ConsoleKey key;
-            decimal sum;
+
+                decimal sum = 0;
             do
             {
                 Console.Clear();
-
-                Console.SetCursorPosition(25, 0);
-                Console.WriteLine($"Отредактируйте эту запись:\n{note}");
-
-                note.Description = EditDesc();
-                note.Time = EditDateTime();
-                note.Sum = sum = EditSum();
-                note.ProfitCost = EditProfitCost();
-
+                Console.WriteLine($"Отредактируйте эту запись:");
+                string method = Select(editors, 0, 2, $"{note}");
+                switch (method)
+                {
+                    case DESCRPTION:
+                        note.Description = EditDescription();
+                        break;
+                    case TIME:
+                        note.Time = EditDateTime();
+                        break;
+                    case SUM:
+                        sum = EditSum();
+                        break;
+                    case PROFIT_COST:
+                        note.ProfitCost = EditProfitCost();
+                        break;
+                    case PLAN_DONE:
+                        note.PlanDone = EditPlanDone();
+                        break;
+                    case EXIT:
+                        break;
+                    default:
+                        break;
+                }
                 note.Sum = note.ProfitCost == ProfitCost.Расход ? Math.Abs(sum) * -1 : Math.Abs(sum);
-
-                note.PlanDone = EditPlanDone();
 
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
@@ -188,6 +214,48 @@ namespace PersonalFinanceManager.View
                 key = Console.ReadKey(true).Key;
             } while (key != ConsoleKey.Y && key != ConsoleKey.Escape);
         }
+
+        //private static void Edit2(Note note)
+        //{
+        //    ConsoleKey key;
+        //    decimal sum;
+        //    do
+        //    {
+        //        Console.Clear();
+
+        //        Console.SetCursorPosition(25, 0);
+        //        Console.WriteLine($"Отредактируйте эту запись:\n{note}");
+
+        //        note.Description = EditDescription();
+        //        note.Time = EditDateTime();
+        //        note.Sum = sum = EditSum();
+        //        note.ProfitCost = EditProfitCost();
+
+        //        note.Sum = note.ProfitCost == ProfitCost.Расход ? Math.Abs(sum) * -1 : Math.Abs(sum);
+
+        //        note.PlanDone = EditPlanDone();
+
+        //        Console.Clear();
+        //        Console.SetCursorPosition(0, 0);
+        //        Console.WriteLine($"{note}\nНажмите 'Y' если согласны с изменениями:");
+
+        //        key = Console.ReadKey(true).Key;
+        //    } while (key != ConsoleKey.Y && key != ConsoleKey.Escape);
+        //}
+
+        private static string EditDescription()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(25, 2);
+            Console.WriteLine("Введите описание");
+            //  Console.OutputEncoding = System.Text.Encoding.UTF8;
+            //  System.Console.InputEncoding = Encoding.GetEncoding(1251);
+
+            var v = Console.ReadLine();
+            v ??= "";//if is null
+            return v;
+        }
+
 
 
         private static PlanDone EditPlanDone()
@@ -218,20 +286,6 @@ namespace PersonalFinanceManager.View
         {
             return GetDateTime(25, 4, "Выберите дату");
         }
-
-        private static string EditDesc()
-        {
-            //  Console.Clear();
-            Console.SetCursorPosition(25, 2);
-            Console.WriteLine("Введите описание");
-            //  Console.OutputEncoding = System.Text.Encoding.UTF8;
-            //  System.Console.InputEncoding = Encoding.GetEncoding(1251);
-
-            var v = Console.ReadLine();
-            v ??= "";//if is null
-            return v;
-        }
-
 
         public delegate void ChangeDate(int n); // DELEGATE
         public static DateTime GetDateTime(int x = 0, int y = 0, string text = "")
