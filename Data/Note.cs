@@ -6,7 +6,7 @@ namespace PersonalFinanceManager.Data
     {
         public Note()
         {
-            id = count++;
+         //   id = count++;
         }
         public Note(string description, ProfitCost profit, PlanDone plan) : this()
         {
@@ -24,8 +24,8 @@ namespace PersonalFinanceManager.Data
         }
 
 
-        public static int count = 1;
-        public int id { get; set; }
+      //  public static int count = 1;
+     //   public int id { get; set; }
         public DateTime? Time { get; set; }
         public decimal? Sum { get; set; }
         public string Description { get; set; }
@@ -37,7 +37,8 @@ namespace PersonalFinanceManager.Data
         //  private static List<INote> notes = new List<INote>();
         public override string ToString()
         {
-            return $"id:{id} Time:{Time} Done:{ProfitCost}\t Plan:{PlanDone}\t Desc:{Description}\t Sum:{Sum}";
+          //  return $"id:{id} Time:{Time} Done:{ProfitCost}\t Plan:{PlanDone}\t Desc:{Description}\t Sum:{Sum}";
+            return $"Time:{Time} Done:{ProfitCost}\t Plan:{PlanDone}\t Desc:{Description}\t Sum:{Sum}";
         }
 
     }

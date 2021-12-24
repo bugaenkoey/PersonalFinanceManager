@@ -33,7 +33,7 @@ namespace PersonalFinanceManager.Service
 
         public static void Add(Note note)
         {
-            if (!notes.Any(n => n.id == note.id))
+            //if (!notes.Any(n => n.id == note.id))
                 notes.Add(note);
         }
         public static List<Note> GetAll()
@@ -118,6 +118,9 @@ namespace PersonalFinanceManager.Service
         {
             using FileStream openStream = File.OpenRead(path);
             notes = await JsonSerializer.DeserializeAsync<List<Note>>(openStream);
+
+            //int id=notes.Max(n => n.id);
+            //Note.count = id;
         }
 
         public static async Task SaveAsync()
